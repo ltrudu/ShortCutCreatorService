@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ShortCutCreatorService</string>
+    <string name="accessibility_service_description">A service to create Shortcuts to applications without user interaction</string>
+    <string name="loading_status">Loading Application</string>
+    <string name="retrieving_permissions">Retrieving Permissions</string>
+    <string name="success_granting_permissions">Success Granting Permissions.</string>
+
+</resources>
