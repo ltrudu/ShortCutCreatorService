@@ -35,6 +35,15 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
+        <receiver
+            android:name=".ShortCutCreatorReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.app.action.SHORTCUT_CREATOR_SERVICE_CREATE" />
+            </intent-filter>
+        </receiver>
+
         <uses-library
             android:name="com.symbol.emdk"
             android:required="true" />

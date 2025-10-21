@@ -16,3 +16,5 @@ local.properties
 .idea/
 AppOverLockScreenTest/release/
 ShortCutCreatorService/release/
+.claude/
+screenshot.png

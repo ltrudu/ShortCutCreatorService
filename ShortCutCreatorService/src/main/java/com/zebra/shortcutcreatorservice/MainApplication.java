@@ -38,7 +38,7 @@ public class MainApplication extends Application {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                CriticalPermissionsHelper.grantPermissionWithClassName(MainApplication.this, EPermissionType.ACCESSIBILITY_SERVICE, "com.zebra.shortcutcreatorservice/.ShortCutCreatorService" ,new IResultCallbacks() {
+                CriticalPermissionsHelper.grantPermissionWithClassName(MainApplication.this, EPermissionType.ACCESSIBILITY_SERVICE, Constants.ACCESSIBITLITY_SERVICE_CLASS_NAME ,new IResultCallbacks() {
                     @Override
                     public void onSuccess(String message, String resultXML) {
                         permissionGranted = true;
