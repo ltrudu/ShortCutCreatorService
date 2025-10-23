@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -34,6 +35,7 @@ public class ShortCutCreatorReceiver extends BroadcastReceiver {
         String iconPath = null;
         String componentPackage = null;
         String componentActivity = null;
+        Uri data = null;
         Bundle bundleExtras = null;
 
         // Get shortLabel if provided in intent
@@ -98,7 +100,21 @@ public class ShortCutCreatorReceiver extends BroadcastReceiver {
             iconPath = intent.getStringExtra(Constants.SHORTCUT_ICON_PATH);
         }
 
-
+        // Check if the shortcut has data to pass to the target app
+        if(intent.hasExtra(Constants.SHORTCUT_DATA))
+        {
+            String urlString = intent.getStringExtra(Constants.SHORTCUT_DATA);
+            if(urlString != null && urlString.isEmpty() == false)
+            {
+                try {
+                    data = Uri.parse(urlString);
+                } catch (NullPointerException e) {
+                    // Handle case where urlString might be null or invalid
+                    e.printStackTrace();
+                    data = null;
+                }
+            }
+        }
 
         // Get extras if available
         bundleExtras = extractAndFilterExtras(intent);
@@ -110,7 +126,9 @@ public class ShortCutCreatorReceiver extends BroadcastReceiver {
                 iconPath,
                 componentPackage,
                 componentActivity,
+                data,
                 bundleExtras);
+
     }
 
     private Bundle extractAndFilterExtras(Intent sourceIntent) {

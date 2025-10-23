@@ -18,6 +18,7 @@ public class Constants {
     public static final String SHORTCUT_SHORT_LABEL = "shortcut_short_label";
     public static final String SHORTCUT_LONG_LABEL = "shortcut_long_label";
     public static final String SHORTCUT_ICON_PATH = "shortcut_icon_path";
+    public static final String SHORTCUT_DATA = "shortcut_data";
 
     public static final Set<String> EXCLUDED_KEYS = new HashSet<>(Arrays.asList(
             SHORTCUT_UUID_PREFIX,
@@ -25,6 +26,7 @@ public class Constants {
             SHORTCUT_COMPONENT_ACTIVITY,
             SHORTCUT_SHORT_LABEL,
             SHORTCUT_LONG_LABEL,
-            SHORTCUT_ICON_PATH
+            SHORTCUT_ICON_PATH,
+            SHORTCUT_DATA
     ));
 }

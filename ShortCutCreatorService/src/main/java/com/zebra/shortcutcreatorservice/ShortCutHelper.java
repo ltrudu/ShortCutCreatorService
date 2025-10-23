@@ -4,14 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
@@ -25,6 +29,7 @@ public class ShortCutHelper {
             String iconPath,
             String componentPackage,
             String componentActivity,
+            Uri data,
             Bundle extras) {
 
         // Check if the Android version supports App Shortcuts (API 25/7.1 or newer)
@@ -53,24 +58,46 @@ public class ShortCutHelper {
         // Add flags to ensure the app is launched correctly
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        // 2. Attach the Qualified Parameters (Intent Extras)
-        if(extras != null && !extras.isEmpty())
-        {
+        // 2. Attach the Qualified Parameters (Intent Extras) and eventual data
+        if (extras != null && !extras.isEmpty()) {
             intent.putExtras(extras);
         }
 
-        // 3. Create shortcut icon
-        Icon shortcutIcon;
-        File iconFile = null;
-        if(iconPath != null && iconPath.isEmpty() == false)
+        // 2.1 Attach data if some were passed to the shortcut service intent
+        if (data != null)
         {
+            intent.setData(data);
+        }
+
+        // 3. Create shortcut icon
+        Icon shortcutIcon = null;
+        File iconFile = null;
+        if (iconPath != null && iconPath.isEmpty() == false) {
             iconFile = new File(iconPath);
         }
 
-        if (iconFile !=null && iconFile.exists()) {
+        Bitmap iconBitmap = null;
+        if (iconFile != null && iconFile.exists()) {
             // Use the icon from the specified file path
-            shortcutIcon = Icon.createWithFilePath(iconPath);
-        } else {
+            iconBitmap = BitmapFactory.decodeFile(iconPath);
+        }
+
+        if(iconBitmap != null)
+        {
+            int desiredSize = (int) context.getResources().getDimension(android.R.dimen.app_icon_size);
+            Bitmap finalBitmap = Bitmap.createScaledBitmap(iconBitmap, desiredSize, desiredSize, true);
+
+            // 3. Create the Icon from the Bitmap
+            // Use createWithAdaptiveBitmap to prevent Android badge overlay
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                shortcutIcon = Icon.createWithAdaptiveBitmap(finalBitmap);
+            } else {
+                shortcutIcon = Icon.createWithBitmap(finalBitmap);
+            }
+        }
+
+        if(shortcutIcon == null)
+        {
             // Fallback: If the file doesn't exist, use a default resource icon
             // R.drawable.ic_default_icon must exist in your project's drawable folder!
             shortcutIcon = Icon.createWithResource(context, R.drawable.ic_launcher_foreground);

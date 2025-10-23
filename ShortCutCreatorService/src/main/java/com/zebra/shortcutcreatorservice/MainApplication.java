@@ -41,12 +41,37 @@ public class MainApplication extends Application {
                 CriticalPermissionsHelper.grantPermissionWithClassName(MainApplication.this, EPermissionType.ACCESSIBILITY_SERVICE, Constants.ACCESSIBITLITY_SERVICE_CLASS_NAME ,new IResultCallbacks() {
                     @Override
                     public void onSuccess(String message, String resultXML) {
-                        permissionGranted = true;
-                        sErrorMessage = null;
-                        if(MainApplication.iMainApplicationCallback != null)
-                        {
-                            MainApplication.iMainApplicationCallback.onPermissionSuccess(message);
-                        }
+                        // Granting Manage All Files Permission
+                        CriticalPermissionsHelper.grantPermission(MainApplication.this, EPermissionType.MANAGE_EXTERNAL_STORAGE, new IResultCallbacks() {
+                            @Override
+                            public void onSuccess(String s, String s1) {
+                                permissionGranted = true;
+                                sErrorMessage = null;
+                                if(MainApplication.iMainApplicationCallback != null)
+                                {
+                                    MainApplication.iMainApplicationCallback.onPermissionSuccess(message);
+                                }
+                            }
+
+                            @Override
+                            public void onError(String s, String s1) {
+                                Toast.makeText(MainApplication.this, message, Toast.LENGTH_LONG).show();
+                                permissionGranted = true;
+                                sErrorMessage = message;
+                                if(MainApplication.iMainApplicationCallback != null)
+                                {
+                                    MainApplication.iMainApplicationCallback.onPermissionError(message);
+                                }
+                            }
+
+                            @Override
+                            public void onDebugStatus(String s) {
+                                if(MainApplication.iMainApplicationCallback != null)
+                                {
+                                    MainApplication.iMainApplicationCallback.onPermissionDebug(message);
+                                }
+                            }
+                        });
                     }
 
                     @Override
